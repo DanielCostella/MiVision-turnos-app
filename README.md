@@ -76,9 +76,9 @@ Las contribuciones son bienvenidas. Por favor, lee el archivo [CONTRIBUTING.md](
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
 
 ## 👥 Equipo
-- Frontend Developer: [Tu Nombre]
-- Backend Developer: [Tu Nombre]
-- UI/UX Designer: [Tu Nombre]
+- Frontend Developer: Daniel Costella
+- Backend Developer: Daniel Costella
+- UI/UX Designer: Daniel Costella
 
 ## 🌟 Agradecimientos
 - [WhatsApp Business API]
