@@ -1,0 +1,20 @@
+.react-chatbot-kit-chat-container {
+  width: 100% !important;
+}
+
+.react-chatbot-kit-chat-message-container {
+  height: 400px !important;
+}
+
+.react-chatbot-kit-chat-input {
+  border-radius: 0 !important;
+}
+
+.react-chatbot-kit-chat-btn-send {
+  background-color: #3b82f6 !important;
+}
+
+.react-chatbot-kit-chat-bot-message {
+  background-color: #3b82f6 !important;
+  margin-left: 0 !important;
+}
