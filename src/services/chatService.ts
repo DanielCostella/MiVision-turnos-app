@@ -10,7 +10,7 @@ export const chatService = {
     sessionData: ChatSessionData
   ): Promise<ChatResponse> => {
     try {
-      const response = await axios.post(`${API_URL}/chat`, {
+      const response = await axios.post<ChatResponse>(`${API_URL}/chat`, {
         message,
         currentStep,
         sessionData

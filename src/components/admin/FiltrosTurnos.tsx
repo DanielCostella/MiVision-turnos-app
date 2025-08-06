@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 interface Filtros {
   sede: string;
   profesional: string;
-  fecha: Date;
+  fecha: Date | null;
 }
 
 interface FiltrosTurnosProps {
@@ -16,10 +16,10 @@ export const FiltrosTurnos: React.FC<FiltrosTurnosProps> = ({ onChange }) => {
   const [filtros, setFiltros] = useState<Filtros>({
     sede: '',
     profesional: '',
-    fecha: new Date()
+    fecha: null
   });
 
-  const handleChange = (campo: keyof Filtros, valor: string | Date) => {
+  const handleChange = (campo: keyof Filtros, valor: string | Date | null) => {
     const nuevosFiltros = { ...filtros, [campo]: valor };
     setFiltros(nuevosFiltros);
     onChange(nuevosFiltros);
@@ -47,7 +47,7 @@ export const FiltrosTurnos: React.FC<FiltrosTurnosProps> = ({ onChange }) => {
 
         <DatePicker
           selected={filtros.fecha}
-          onChange={(date: Date) => handleChange('fecha', date)}
+          onChange={(date: Date | null) => handleChange('fecha', date)}
           className="p-2 border rounded w-full"
           dateFormat="dd/MM/yyyy"
         />

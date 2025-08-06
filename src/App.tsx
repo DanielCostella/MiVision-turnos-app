@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/common/Navbar';
@@ -9,8 +8,8 @@ import Ubicacion from './components/Ubicacion';
 import { AdminPanel } from './components/admin/AdminPanel';
 import { AdminLogin } from './components/admin/AdminLogin';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import { WhatsAppButton } from './components/common/WhatsAppButton';
-import { ReservarTurnoButton } from './components/common/ReservarTurnoButton';
+import ChatbotComponent from './components/chatbot/ChatbotComponent';
+import './styles/chatbot.css';
 
 const App: React.FC = () => {
   return (
@@ -48,8 +47,7 @@ const App: React.FC = () => {
             }
           />
         </Routes>
-        <WhatsAppButton />
-        <ReservarTurnoButton />
+        <ChatbotComponent />
       </div>
     </Router>
   );

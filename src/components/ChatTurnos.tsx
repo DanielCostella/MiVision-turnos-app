@@ -4,14 +4,13 @@ import type { ChatState, ChatMessage, ChatSessionData } from '../types/chat';
 import { v4 as uuidv4 } from 'uuid';
 
 const ChatTurnos: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<ChatState>('inicial');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [currentStep, setCurrentStep] = useState<ChatState>('inicial');
   const [sessionData, setSessionData] = useState<ChatSessionData>({});
-  const [input, setInput] = useState(''); // Agregamos estado para el input
+  const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Mensaje inicial del bot
     const initialMessage: ChatMessage = {
       id: uuidv4(),
       text: '¡Hola! Bienvenido al sistema de turnos de MI VISIÓN.',
@@ -23,45 +22,44 @@ const ChatTurnos: React.FC = () => {
     handleInitialStep();
   }, []);
 
-  const handleSend = () => { // Agregamos función handleSend
-    if (input.trim()) {
-      handleUserMessage(input.trim());
-      setInput('');
-    }
-  };
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputMessage.trim()) return;
 
-  const handleUserMessage = async (message: string) => {
-    // Mensaje del usuario
     const userMessage: ChatMessage = {
       id: uuidv4(),
-      text: message,
+      text: inputMessage,
       isBot: false,
       timestamp: Date.now()
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
 
     try {
-      const { response, nextStep, data } = await chatService.handleChat(
-        message,
+      const response = await chatService.handleChat(
+        inputMessage,
         currentStep,
         sessionData
       );
 
-      // Respuesta del bot
       const botResponse: ChatMessage = {
         id: uuidv4(),
-        text: response,
+        text: response.response,
         isBot: true,
         timestamp: Date.now()
       };
 
       setMessages(prev => [...prev, botResponse]);
-      setCurrentStep(nextStep as ChatState);
-      setSessionData(data);
+      setCurrentStep(response.nextStep);
+      setSessionData(response.data);
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const formatTimestamp = (timestamp: number): string => {
+    return new Date(timestamp).toLocaleTimeString();
   };
 
   const handleInitialStep = async () => {
@@ -70,16 +68,11 @@ const ChatTurnos: React.FC = () => {
       id: uuidv4(),
       text: response.response,
       isBot: true,
-      timestamp: Date.now() // Cambiamos Date a number
+      timestamp: Date.now()
     }]);
 
     setCurrentStep(response.nextStep);
     setSessionData(response.data);
-  };
-
-  // Función para formatear el timestamp
-  const formatTimestamp = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString();
   };
 
   return (
@@ -113,20 +106,20 @@ const ChatTurnos: React.FC = () => {
         <form 
           onSubmit={(e) => {
             e.preventDefault();
-            handleSend();
+            handleSendMessage(e);
           }}
           className="flex space-x-2"
         >
           <input
             type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
             placeholder={getPlaceholderForStep(currentStep)}
             className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
-            disabled={!input.trim()}
+            disabled={!inputMessage.trim()}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg disabled:opacity-50 hover:bg-blue-700"
           >
             Enviar

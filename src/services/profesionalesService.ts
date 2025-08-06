@@ -1,16 +1,23 @@
-import axios from 'axios';
-import { Profesional } from '../types/profesional';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+import { Profesional } from '../models/Profesional';
 
 export const profesionalesService = {
-    getProfesionales: async (): Promise<Profesional[]> => {
-        try {
-            const response = await axios.get(`${API_URL}/profesionales`);
-            return response.data.data;
-        } catch (error) {
-            console.error('Error al obtener profesionales:', error);
-            return [];
-        }
+  getProfesionales: async () => {
+    try {
+      const response = await fetch('/api/profesionales');
+      return await response.json();
+    } catch (error) {
+      console.error('Error:', error);
+      return { success: false };
     }
+  },
+
+  getProfesionalesBySede: async (sedeId: number) => {
+    try {
+      const response = await fetch(`/api/profesionales/sede/${sedeId}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Error:', error);
+      return { success: false };
+    }
+  }
 };

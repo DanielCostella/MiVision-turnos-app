@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { Turno } from '../types/app';
 import { dbService } from '../services/dbService';
 
-export const AdminDashboard = () => {
-  const [turnos, setTurnos] = useState([]);
+const AdminDashboard: React.FC = () => {
+  const [turnos, setTurnos] = useState<Turno[]>([]);
 
   useEffect(() => {
     const cargarTurnos = async () => {
-      const turnosHoy = await dbService.getTurnosHoy();
-      setTurnos(turnosHoy);
+      try {
+        const turnosHoy = await dbService.getTurnosHoy();
+        setTurnos(turnosHoy);
+      } catch (error) {
+        console.error('Error al cargar turnos:', error);
+      }
     };
 
     cargarTurnos();
     const interval = setInterval(cargarTurnos, 60000); // Actualizar cada minuto
-    
     return () => clearInterval(interval);
   }, []);
 
@@ -33,3 +37,5 @@ export const AdminDashboard = () => {
     </div>
   );
 };
+
+export default AdminDashboard;

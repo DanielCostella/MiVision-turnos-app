@@ -1,55 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { turnosService, Turno } from '../../../services/turnosService';
+import { turnosService } from '../../../services/turnosService';
 
 interface TurnosWidgetProps {
   actionProvider: {
-    handleTurno: (horario: string) => void;
-    handleSedeSelection: (sedeId: number) => void;
+    // Define aquí los métodos necesarios del actionProvider
   };
-  setState: any;
+  sedeId: number;
 }
 
-const TurnosWidget: React.FC<TurnosWidgetProps> = ({ actionProvider, setState }) => {
-  const [turnos, setTurnos] = useState<Turno[]>([]);
-  const [sedeSeleccionada, setSedeSeleccionada] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+const TurnosWidget: React.FC<TurnosWidgetProps> = ({ actionProvider, sedeId }) => {
+  const [turnos, setTurnos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (sedeSeleccionada) {
-      cargarTurnosPorSede(sedeSeleccionada);
-    }
-  }, [sedeSeleccionada]);
+    const loadTurnos = async () => {
+      try {
+        setLoading(true);
+        const turnosData = await turnosService.getTurnosBySede(sedeId);
+        setTurnos(turnosData);
+      } catch (error) {
+        console.error('Error al cargar turnos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const cargarTurnosPorSede = async (sedeId: number) => {
-    try {
-      setLoading(true);
-      const turnosData = await turnosService.getTurnosPorSede(sedeId);
-      setTurnos(turnosData);
-    } catch (error) {
-      console.error('Error al cargar turnos:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    loadTurnos();
+  }, [sedeId]);
+
+  if (loading) return <div>Cargando turnos...</div>;
 
   return (
-    <div className="turnos-widget">
-      <h3>Turnos Disponibles:</h3>
-      {loading ? (
-        <p>Cargando turnos...</p>
-      ) : (
-        <div className="grid gap-2">
-          {turnos.map((turno) => (
-            <button
-              key={turno.id}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              onClick={() => actionProvider.handleTurno(turno.hora)}
-            >
-              {turno.fecha} - {turno.hora}
-            </button>
-          ))}
-        </div>
-      )}
+    <div>
+      {/* Renderizar la lista de turnos */}
     </div>
   );
 };

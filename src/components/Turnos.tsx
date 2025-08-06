@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Loader2 } from 'lucide-react';
 import { sedesService } from '../services/sedesService';
-import type { Sede } from '../models/Sede';
+import { Sede } from '../models/Sede';
 
 const Turnos: React.FC = () => {
   const [sedes, setSedes] = useState<Sede[]>([]);
@@ -12,13 +12,13 @@ const Turnos: React.FC = () => {
     const loadSedes = async () => {
       try {
         const result = await sedesService.getSedes();
-        if (result.success) {
+        if (result.success && result.data) {
           setSedes(result.data);
         } else {
           setError('Error al cargar las sedes');
         }
       } catch (error) {
-        setError('Error de conexión');
+        setError('Error al cargar las sedes');
       } finally {
         setLoading(false);
       }

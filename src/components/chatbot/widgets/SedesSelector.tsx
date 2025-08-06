@@ -3,11 +3,13 @@ import { Sede } from '../../../models/Sede';
 import { sedesService } from '../../../services/sedesService';
 
 interface SedesSelectorProps {
+  setState: (state: any) => void;
   actionProvider: any;
-  setState: any;
+  state: any;
 }
 
-const SedesSelector: React.FC<SedesSelectorProps> = ({ actionProvider }) => {
+const SedesSelector: React.FC<SedesSelectorProps> = (props) => {
+  const { actionProvider } = props;
   const [sedes, setSedes] = useState<Sede[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,14 +28,15 @@ const SedesSelector: React.FC<SedesSelectorProps> = ({ actionProvider }) => {
   if (loading) return <div>Cargando sedes...</div>;
 
   return (
-    <div className="sedes-selector">
+    <div className="grid gap-2">
       {sedes.map((sede) => (
         <button
           key={sede.id}
-          className="w-full p-2 mb-2 text-left hover:bg-gray-100 rounded"
           onClick={() => actionProvider.handleSedeSelected(sede.id)}
+          className="p-3 text-left bg-white hover:bg-gray-50 rounded-lg border"
         >
-          {sede.nombre} - {sede.direccion}
+          <p className="font-medium">{sede.nombre}</p>
+          <p className="text-sm text-gray-500">{sede.direccion}</p>
         </button>
       ))}
     </div>
