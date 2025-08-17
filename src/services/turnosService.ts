@@ -1,52 +1,56 @@
 import axios from 'axios';
-import { Turno } from '../models/Turno';
 
 const API_URL = 'http://localhost:3001/api';
 
+export interface TurnosStats {
+  turnosPorEstado: {
+    pendientes: number;
+    confirmados: number;
+    cancelados: number;
+    completados: number;
+  };
+  turnosHoy: number;
+  profesionalesActivos: number;
+}
+
 export const turnosService = {
-  async createTurno(data: any) {
-    try {
-      const response = await fetch('/api/turnos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Error al crear turno:', error);
-      return { success: false };
-    }
+  getTurnosStats: async (): Promise<TurnosStats> => {
+    const response = await axios.get(`${API_URL}/turnos/admin/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    return response.data.data;
   },
 
-  async getTurnosBySede(sedeId: number) {
-    try {
-      const response = await fetch(`/api/turnos/sede/${sedeId}`);
-      return await response.json();
-    } catch (error) {
-      console.error('Error al obtener turnos:', error);
-      return { success: false };
-    }
+  getHorariosDisponibles: async (profesionalId: number, fecha: string) => {
+    const response = await axios.get(
+      `${API_URL}/turnos/horarios-disponibles/${profesionalId}`,
+      {
+        params: { fecha }
+      }
+    );
+    return response.data.data;
   },
 
-  async getTurnosByProfesional(profesionalId: number) {
-    try {
-      const response = await fetch(`/api/turnos/profesional/${profesionalId}`);
-      return await response.json();
-    } catch (error) {
-      console.error('Error al obtener turnos:', error);
-      return { success: false };
-    }
+  crearTurno: async (turnoData: any) => {
+    const response = await axios.post(`${API_URL}/turnos`, turnoData);
+    return response.data;
   },
 
-  async getHorariosDisponibles(profesionalId: number) {
-    try {
-      const response = await fetch(`/api/turnos/disponibilidad/${profesionalId}`);
-      return await response.json();
-    } catch (error) {
-      console.error('Error:', error);
-      return { success: false };
-    }
+  actualizarEstado: async (turnoId: number, estado: string) => {
+    const response = await axios.put(`${API_URL}/turnos/${turnoId}/estado`, {
+      estado
+    });
+    return response.data;
+  },
+
+  getTurnosBySede: async (sedeId: number) => {
+    const response = await axios.get(`${API_URL}/turnos/sede/${sedeId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    return response.data;
   }
 };

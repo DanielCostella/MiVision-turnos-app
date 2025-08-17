@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Loader2 } from 'lucide-react';
 import { sedesService } from '../services/sedesService';
-import { Sede } from '../models/Sede';
+import { Sede } from '../models/Sede'; // Cambiamos la importación
 
 const Turnos: React.FC = () => {
   const [sedes, setSedes] = useState<Sede[]>([]);
@@ -11,13 +10,12 @@ const Turnos: React.FC = () => {
   useEffect(() => {
     const loadSedes = async () => {
       try {
-        const result = await sedesService.getSedes();
-        if (result.success && result.data) {
-          setSedes(result.data);
-        } else {
-          setError('Error al cargar las sedes');
+        const response = await sedesService.getSedes();
+        if (response.success && response.data) {
+          setSedes(response.data);
         }
       } catch (error) {
+        console.error('Error:', error);
         setError('Error al cargar las sedes');
       } finally {
         setLoading(false);
@@ -27,45 +25,29 @@ const Turnos: React.FC = () => {
     loadSedes();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-red-500 text-center py-8">{error}</div>
-    );
-  }
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Reservá tu turno</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sedes.map((sede) => (
-            <div key={sede.id} className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-semibold mb-4">{sede.nombre}</h3>
-              <p className="text-gray-600 mb-2">{sede.direccion}</p>
-              <p className="text-gray-600 mb-4">{sede.telefono}</p>
-              <button
-                onClick={() => {
-                  const mensaje = `Hola! Me gustaría solicitar un turno para la sede ${sede.nombre}`;
-                  window.open(`https://wa.me/2615134452?text=${encodeURIComponent(mensaje)}`, '_blank');
-                }}
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <MessageSquare className="inline-block w-5 h-5 mr-2" />
-                Solicitar Turno
-              </button>
-            </div>
-          ))}
-        </div>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">Sedes Disponibles</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {sedes.map((sede) => (
+          <div key={sede.id} className="border p-4 rounded-lg shadow">
+            <h3 className="text-xl font-semibold">{sede.nombre}</h3>
+            <p className="text-gray-600">{sede.direccion}</p>
+            <p className="text-gray-600">{sede.telefono}</p>
+            {sede.horarios && (
+              <div className="mt-2">
+                <p className="text-sm">Horarios:</p>
+                <p className="text-sm">Lunes a Viernes: {sede.horarios.semana}</p>
+                <p className="text-sm">Sábados: {sede.horarios.sabado}</p>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 

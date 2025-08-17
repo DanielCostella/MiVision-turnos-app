@@ -1,3 +1,5 @@
+import { Usuario, Profesional, Sede } from '../types';
+
 export type TurnoEstado = 'pendiente' | 'confirmado' | 'cancelado' | 'completado';
 
 export interface TurnoBase {
@@ -15,4 +17,7 @@ export interface Turno extends TurnoBase {
   estado: TurnoEstado;
   created_at: string;
   updated_at: string;
+  usuario?: Usuario;
+  profesional?: Profesional;
+  sede?: Sede;
 }

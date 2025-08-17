@@ -8,7 +8,7 @@ export interface TurnoBase {
   usuario_id: number;
   fecha: string;
   hora: string;
-  estado: 'pendiente' | 'confirmado' | 'cancelado' | 'completado';
+  estado: 'confirmado' | 'cancelado' | 'completado';
   motivo?: string;
   notas?: string;
   created_at?: Date;
@@ -58,6 +58,7 @@ export interface Sede extends RowDataPacket {
     semana: string;
     sabado: string;
   };
+  activa: boolean;
 }
 
 export interface ApiResponse<T> {
@@ -66,3 +67,9 @@ export interface ApiResponse<T> {
   message?: string;
   error?: string;
 }
+
+export * from './sede';
+export * from './profesional';
+export * from './turno';
+export * from './api';
+export * from './chat';

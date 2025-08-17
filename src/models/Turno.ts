@@ -4,7 +4,7 @@ export interface TurnoBase {
   pacienteId?: number;
   profesionalId: number;
   sedeId: number;
-  estado: 'pendiente' | 'confirmado' | 'cancelado';
+  estado: 'confirmado' | 'cancelado';
 }
 
 export interface Turno extends TurnoBase {

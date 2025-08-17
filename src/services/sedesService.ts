@@ -1,33 +1,18 @@
-import { apiService } from './apiService';
-import type { Sede } from '../models/Sede';
+import axios from 'axios';
+import { Sede } from '../models/Sede';
+import { ApiResponse } from '../types/api';
 
-interface ServiceResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: any;
-}
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 export const sedesService = {
-  getSedes: async (): Promise<ServiceResponse<Sede[]>> => {
+  getSedes: async (): Promise<ApiResponse<Sede[]>> => {
     try {
-      const response = await apiService.getSedes();
-      return response;
+      const response = await axios.get(`${API_URL}/sedes`);
+      console.log('Respuesta del servidor:', response.data); // Para debug
+      return response.data;
     } catch (error) {
       console.error('Error al obtener sedes:', error);
-      return { success: false, error };
-    }
-  },
-
-  obtenerSedePorId: async (id: number): Promise<ServiceResponse<Sede>> => {
-    try {
-      const response = await apiService.getSedeById(id);
-      if (!response.success) {
-        throw new Error('Error al obtener sede');
-      }
-      return response;
-    } catch (error) {
-      console.error('Error al obtener sede:', error);
-      return { success: false, error };
+      throw error;
     }
   }
 };

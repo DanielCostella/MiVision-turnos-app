@@ -6,7 +6,15 @@ import { v4 as uuidv4 } from 'uuid';
 const ChatTurnos: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentStep, setCurrentStep] = useState<ChatState>('inicial');
-  const [sessionData, setSessionData] = useState<ChatSessionData>({});
+  const [sessionData, setSessionData] = useState<ChatSessionData>({
+    messages: [],
+    selectedSede: null,
+    selectedProfesional: null,
+    selectedFecha: null,
+    selectedHorario: undefined,
+    profesionales: [],
+    currentStep: 'inicial'
+  });
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -36,23 +44,34 @@ const ChatTurnos: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
 
-    try {
-      const response = await chatService.handleChat(
-        inputMessage,
-        currentStep,
-        sessionData
-      );
+    handleMessage(inputMessage);
+  };
 
+  const handleMessage = async (message: string) => {
+    try {
+      const response = await chatService.handleChat(message, currentStep, sessionData);
       const botResponse: ChatMessage = {
         id: uuidv4(),
         text: response.response,
         isBot: true,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        widget: response.widget
       };
 
       setMessages(prev => [...prev, botResponse]);
-      setCurrentStep(response.nextStep);
-      setSessionData(response.data);
+      
+      // Corregimos el primer error - setCurrentStep
+      if (response.nextStep) {
+        setCurrentStep(response.nextStep); // Ahora solo se ejecuta si nextStep existe
+      }
+
+      // Corregimos el segundo error - setSessionData
+      if (response.data) {
+        setSessionData(prev => ({
+          ...prev,
+          ...response.data
+        }));
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -62,17 +81,61 @@ const ChatTurnos: React.FC = () => {
     return new Date(timestamp).toLocaleTimeString();
   };
 
-  const handleInitialStep = async () => {
-    const response = await chatService.handleChat('', 'inicial', {});
-    setMessages(prev => [...prev, {
+  const handleFechaSelect = async (fecha: string) => {
+    const botResponse: ChatMessage = {
       id: uuidv4(),
-      text: response.response,
+      text: `Has seleccionado la fecha: ${fecha}. Ahora, elige un horario disponible:`,
       isBot: true,
       timestamp: Date.now()
-    }]);
+    };
 
-    setCurrentStep(response.nextStep);
-    setSessionData(response.data);
+    setMessages(prev => [...prev, botResponse]);
+    setSessionData(prev => ({
+      ...prev,
+      selectedFecha: fecha,
+      currentStep: 'horario'
+    }));
+    setCurrentStep('horario');
+  };
+
+  const handleInitialStep = async () => {
+    const initialSessionData: ChatSessionData = {
+      messages: [],
+      selectedSede: null,
+      selectedProfesional: null,
+      selectedFecha: null,
+      selectedHorario: undefined,
+      profesionales: [],
+      currentStep: 'inicial'
+    };
+
+    try {
+      const response = await chatService.handleChat('', 'inicial', initialSessionData);
+      
+      setMessages(prev => [...prev, {
+        id: uuidv4(),
+        text: response.response,
+        isBot: true,
+        timestamp: Date.now(),
+        widget: response.widget
+      }]);
+
+      // Corregimos el tercer error - manejo de currentStep en setSessionData
+      if (response.nextStep) {
+        setCurrentStep(response.nextStep);
+        
+        if (response.data) {
+          // Aseguramos que currentStep nunca sea undefined
+          setSessionData(prev => ({
+            ...prev,
+            ...response.data,
+            currentStep: response.nextStep || prev.currentStep // Usamos el valor actual si nextStep es undefined
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error en handleInitialStep:', error);
+    }
   };
 
   return (
