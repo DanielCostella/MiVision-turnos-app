@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import Chatbot from 'react-chatbot-kit';
+import { Chatbot } from 'react-chatbot-kit';
+import config from './config';
 import { Bot } from 'lucide-react';
 import 'react-chatbot-kit/build/main.css';
-import ChatbotButton from './ChatbotButton';
-import config from './config';
 import MessageParser from './MessageParser';
 import ActionProvider from './ActionProvider';
+import ChatbotButton from './ChatbotButton';
 
 const ChatbotComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const toggleChat = () => setIsOpen(!isOpen);
+
   return (
     <>
-      <ChatbotButton onClick={() => setIsOpen(!isOpen)} isOpen={isOpen} />
+      <ChatbotButton onClick={toggleChat} isOpen={isOpen} />
       
       {isOpen && (
         <div className="fixed bottom-24 right-4 z-50 shadow-2xl rounded-lg overflow-hidden w-96 max-w-[calc(100vw-2rem)]">

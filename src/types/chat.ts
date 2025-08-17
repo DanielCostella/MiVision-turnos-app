@@ -1,16 +1,20 @@
 export type ChatState = 'inicial' | 'sede' | 'profesional' | 'fecha' | 'horario' | 'confirmacion' | 'finalizado';
 
 export interface ChatSessionData {
-  selectedSede?: number;
-  selectedProfesional?: number;
+  messages: any[];
+  selectedSede: any | null;
+  selectedProfesional: any | null;
+  selectedFecha: string | null;
   selectedHorario?: string;
-  [key: string]: any;
+  profesionales: any[];
+  currentStep: ChatState; // Nota: esto NO puede ser undefined
 }
 
 export interface ChatResponse {
   response: string;
-  nextStep: ChatState;
-  data: ChatSessionData;
+  nextStep?: ChatState; // Puede ser undefined
+  data?: Partial<ChatSessionData>; // Puede ser undefined
+  widget?: any;
 }
 
 export interface ChatMessage {
