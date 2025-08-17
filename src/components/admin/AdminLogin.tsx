@@ -1,31 +1,40 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const AdminLogin: React.FC = () => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implementar autenticación
+    setError('');
+    
     try {
-      // Simular login exitoso
-      localStorage.setItem('adminToken', 'dummy-token');
-      navigate('/admin/sedes');
+      await login(credentials.email, credentials.password);
+      navigate('/admin/dashboard');
     } catch (error) {
+      setError('Credenciales inválidas');
       console.error('Error en login:', error);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-center text-3xl font-bold text-gray-900">
           Admin Login
         </h2>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="sr-only">
@@ -66,6 +75,11 @@ export const AdminLogin: React.FC = () => {
             </button>
           </div>
         </form>
+        <div className="text-center mt-4">
+          <Link to="/register" className="text-blue-600 hover:text-blue-700">
+            ¿No tienes cuenta? Regístrate
+          </Link>
+        </div>
       </div>
     </div>
   );

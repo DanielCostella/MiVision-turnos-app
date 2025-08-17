@@ -3,7 +3,8 @@ export interface Sede {
   nombre: string;
   direccion: string;
   telefono: string;
-  horarios?: {
+  email: string;
+  horarios: {
     semana: string;
     sabado: string;
   };
