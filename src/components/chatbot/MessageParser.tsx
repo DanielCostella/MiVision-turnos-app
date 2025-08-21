@@ -1,4 +1,4 @@
-import React from 'react';
+// Removimos la importación de React ya que no se usa directamente
 
 interface MessageParserProps {
   actionProvider: {

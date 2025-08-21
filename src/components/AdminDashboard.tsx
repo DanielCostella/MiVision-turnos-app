@@ -1,38 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { Turno } from '../types/app';
-import { dbService } from '../services/dbService';
+import React, { useState } from 'react';
+import AdminCalendario from './admin/AdminCalendario';
+import Sidebar from './admin/Sidebar';
+
+type Section = 'turnos' | 'sedes' | 'profesionales';
 
 const AdminDashboard: React.FC = () => {
-  const [turnos, setTurnos] = useState<Turno[]>([]);
+  const [activeSection, setActiveSection] = useState<Section>('turnos');
 
-  useEffect(() => {
-    const cargarTurnos = async () => {
-      try {
-        const turnosHoy = await dbService.getTurnosHoy();
-        setTurnos(turnosHoy);
-      } catch (error) {
-        console.error('Error al cargar turnos:', error);
-      }
-    };
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section as Section);
+  };
 
-    cargarTurnos();
-    const interval = setInterval(cargarTurnos, 60000); // Actualizar cada minuto
-    return () => clearInterval(interval);
-  }, []);
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'turnos':
+        return <AdminCalendario />;
+      case 'sedes':
+        return <div>Gestión de Sedes (en desarrollo)</div>;
+      case 'profesionales':
+        return <div>Gestión de Profesionales (en desarrollo)</div>;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="admin-dashboard">
-      <h1>Panel de Administración</h1>
-      <div className="turnos-container">
-        {turnos.map(turno => (
-          <div key={turno.id} className="turno-card">
-            <h3>Turno #{turno.id}</h3>
-            <p>Paciente: {turno.nombre_paciente}</p>
-            <p>Profesional: {turno.nombre_profesional}</p>
-            <p>Hora: {turno.hora}</p>
-            <p>Estado: {turno.estado}</p>
-          </div>
-        ))}
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar activeSection={activeSection} onSectionChange={handleSectionChange} />
+      <div className="flex-1 overflow-auto">
+        <div className="p-6">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );

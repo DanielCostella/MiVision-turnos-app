@@ -88,8 +88,6 @@ const ProfesionalesSelector: React.FC<Props> = ({ actionProvider, state }) => {
         <p className="mt-2 text-sm text-gray-600">Cargando profesionales...</p>
       </div>
     );
-    console.log('⏳ Cargando profesionales (render)');
-    return <div className="text-center p-4">Cargando profesionales...</div>;
   }
 
   if (error) {

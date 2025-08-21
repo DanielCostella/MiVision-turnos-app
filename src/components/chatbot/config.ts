@@ -9,7 +9,8 @@ import ConfirmacionTurno from './widgets/ConfirmacionTurno';
 
 const botName = 'MI VISIÓN Bot';
 
-interface BotState {
+// La interfaz BotState se usa en el tipo State del chatbot
+export interface BotState {
   sedes: any[];
   profesionales: any[];
   selectedSede: any | null;
