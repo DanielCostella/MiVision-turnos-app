@@ -2,13 +2,13 @@
 
 <div align="center">
   <img src="./screenshots/admin-panel.png" alt="Panel General" width="600"/>
-  <p><em>Panel de Principal de MI VISIÓN</em></p>
+  <p><em>Panel Principal de MI VISIÓN</em></p>
 
   <img src="./screenshots/booking.png" alt="Reserva de Turnos" width="600"/>
   <p><em>Sistema de Reserva de Turnos</em></p>
 
   <img src="./screenshots/admin-turnos.png" alt="Panel General" width="600"/>
-  <p><em>Panel de Principal de MI VISIÓN</em></p>
+  <p><em>Panel Administracion de MI VISIÓN</em></p>
 </div>
 
 Sistema completo para gestión de turnos en centro de oftalmología con 2 sedes y múltiples profesionales.
