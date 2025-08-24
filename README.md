@@ -9,9 +9,9 @@
 
   <img src="./screenshots/admin-turnos.png" alt="Panel General" width="600"/>
   <p><em>Panel Administracion de MI VISIÓN</em></p>
-</div>
 
-<img src="./screenshots/EditorProfesionales.png" alt="Panel Edicion" width="600"/>
+
+  <img src="./screenshots/EditorProfesionales.png" alt="Panel Edicion" width="600"/>
   <p><em>Panel Edicion de MI VISIÓN</em></p>
 </div>
 
