@@ -11,6 +11,10 @@
   <p><em>Panel Administracion de MI VISIÓN</em></p>
 </div>
 
+<img src="./screenshots/EditorProfesionales.png" alt="Panel Edicion" width="600"/>
+  <p><em>Panel Edicion de MI VISIÓN</em></p>
+</div>
+
 Sistema completo para gestión de turnos en centro de oftalmología con 2 sedes y múltiples profesionales.
 
 ## 🚀 Tecnologías Utilizadas

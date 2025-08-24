@@ -8,5 +8,5 @@ export interface Profesional {
   email?: string;
   telefono?: string;
   activo?: boolean;
-  horarios?: string;
+  horarios_disponibles?: string;
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import AdminCalendario from './AdminCalendario';
 import HistorialTurnos from './HistorialTurnos';
+import ProfesionalesPorSede from './ProfesionalesPorSede';
 
 export const AdminPanel: React.FC = () => {
   const [activeSection, setActiveSection] = useState('turnos');
@@ -10,9 +11,10 @@ export const AdminPanel: React.FC = () => {
     <div className="min-h-screen bg-gray-100 flex">
       <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
       <div className="flex-1">
-  {activeSection === 'turnos' && <AdminCalendario />}
+        {activeSection === 'turnos' && <AdminCalendario />}
         {activeSection === 'historial' && <HistorialTurnos />}
-        {/* Aquí puedes agregar más secciones si lo necesitas */}
+        {activeSection === 'profesionales' && <ProfesionalesPorSede />}
+        
       </div>
     </div>
   );
